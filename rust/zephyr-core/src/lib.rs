@@ -13,6 +13,7 @@ pub mod poll;
 mod poll_signal;
 pub mod semaphore;
 pub mod thread;
+pub mod message_queue;
 mod time;
 
 pub use time::*;
