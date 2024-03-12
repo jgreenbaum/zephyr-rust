@@ -118,21 +118,29 @@ use super::ZephyrResult;
 pub struct MessageQueue<'m, T: Sized>
 {
     msgq: &'m KMsgq,
-    buffer: &'m mut[T]
+    buffer: Option<&'m mut[T]>
 }
 
 impl<'m, T: Sized> MessageQueue<'m, T> {
     fn new(msgq: &k_msgq, buffer: &'m mut[T], max_msgs: u32) -> MessageQueue<'m,T> 
     {
         k_msgq_init(msgq, buffer, std::mem::sizeof<T>, max_msgs);
-        
+
         MessageQueue {
             msgq: msgq,
-            buffer: buffer
+            buffer: Some(buffer)
         }
     }
     
-    fn alloc_init(msgq: &k_msgq, max_msgs: u32);
+    fn alloc_init(msgq: &k_msgq, max_msgs: u32) {
+        k_msgq_alloc_init(msgq, buffer, std::mem::sizeof<T>, max_msgs);
+
+        MessageQueue {
+            msgq: msgq,
+            buffer: Some(buffer)
+        }
+
+    }
     // fn cleanup(msgq: &k_msgq) -> libc::c_int; 
     fn put(&mut self, data: &T, timeout: k_timeout_t) -> Result<(),usize>;
     fn get(&mut self, timeout: k_timeout_t) -> Result<T,usize>;
