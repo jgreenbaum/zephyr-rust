@@ -21,9 +21,17 @@
 #include <uart_buffered.h>
 #endif
 
+#ifdef CONFIG_GPIO
+#include <zephyr/drivers/gpio.h>
+#endif
+
 #ifdef CONFIG_POSIX_CLOCK
 #include <posix/time.h>
 #endif
+
+// #ifdef CONFIG_I2C
+#include <zephyr/drivers/i2c.h>
+// #endif
 
 // Create a constant we can use from Rust in all cases
 #ifdef CONFIG_USERSPACE
